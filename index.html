@@ -754,40 +754,40 @@
             renderer.xr.setReferenceSpaceType('local');
 
             renderer.xr.addEventListener('sessionstart', (event) => {
-                add_brick(0.0, -0.3, -0.5, 0xf6ef0e); //yellow
+                add_brick(0.0, -0.1, -0.5, 0xf6ef0e); //yellow
                 const session = renderer.xr.getSession();
                 if (session && session.requestReferenceSpace) {
-                    session.requestReferenceSpace('local').then((refSpace) => {
-                        if (session.requestHitTestSource && session.requestHitTestSourceForTransientInput) {
-                            // Enable hand-tracking if available
-                            session.addEventListener('inputsourceschange', () => {
-                                let handDected = false;
-                                for (const inputSource of session.inputSources) {
-                                    if (inputSource.hand) {
-                                        handDected = true;
+                    // session.requestReferenceSpace('local').then((refSpace) => {
+                    //     if (session.requestHitTestSource && session.requestHitTestSourceForTransientInput) {
+                    //         // Enable hand-tracking if available
+                    //         session.addEventListener('inputsourceschange', () => {
+                    //             let handDected = false;
+                    //             for (const inputSource of session.inputSources) {
+                    //                 if (inputSource.hand) {
+                    //                     handDected = true;
 
-                                    }
-                                }
+                    //                 }
+                    //             }
 
-                                if (handDected) {
-                                    add_brick(0.0, -0.4, -0.5, 0x0ef621); //green
-                                } else {
-                                    add_brick(0.0, -0.4, -0.5, 0xff0000); //red
-                                }
+                    //             if (handDected) {
+                    //                 add_brick(0.0, -0.4, -0.5, 0x0ef621); //green
+                    //             } else {
+                    //                 add_brick(0.0, -0.4, -0.5, 0xff0000); //red
+                    //             }
 
-                            });
-                            add_brick(0.0, -0.2, -0.5, 0x0ef6f2); //blue
-                        } else {
-                            add_brick(0.0, -0.4, -0.5, 0xf69d0e); //orange
-                        }
-                    });
-                    add_brick(0.0, -0.3, -0.5, 0xf60ed7); //purple
+                    //         });
+                    //         add_brick(0.0, -0.2, -0.5, 0x0ef6f2); //blue
+                    //     } else {
+                    //         add_brick(0.0, -0.4, -0.5, 0xf69d0e); //orange
+                    //     }
+                    // });
+                    add_brick(0.0, -0.15, -0.5, 0xf60ed7); //purple
                 } else {
                     
                 }
             });
             add_brick(0.0, 0.0, -0.5, 0xff0000);
-            add_brick(0.0, 0.3, -0.5, 0xf60ed7); //purple
+            // add_brick(0.0, 0.3, -0.5, 0xf60ed7); //purple
 
 
 
