@@ -20,76 +20,7 @@
 
         let scene, camera, renderer, cube;
 
-        function init() {
-            // Create scene and camera
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(
-                70,
-                window.innerWidth / window.innerHeight,
-                0.01,
-                20
-            );
-
-            // Create renderer with XR enabled.
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.xr.enabled = true;
-            document.body.appendChild(renderer.domElement);
-
-            // Add ARButton to start AR session.
-            document.body.appendChild(
-                ARButton.createButton(renderer, { requiredFeatures: ["hit-test", "hand-tracking"] })
-            );
-            renderer.xr.setReferenceSpaceType('local');
-
-            if (navigator.xr) {
-                navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
-                    if (supported) {
-                        renderer.xr.addEventListener('sessionstart', (event) => {
-                            const session = renderer.xr.getSession();
-                            if (session && session.requestReferenceSpace) {
-                                session.requestReferenceSpace('local').then((refSpace) => {
-                                    if (session.requestHitTestSource && session.requestHitTestSourceForTransientInput) {
-                                        // Enable hand-tracking if available
-                                        session.addEventListener('inputsourceschange', () => {
-                                            let handDected = false;
-                                            for (const inputSource of session.inputSources) {
-                                                if (inputSource.hand) {
-                                                    handDected = true;
-
-                                                }
-                                            }
-
-                                            let text = 'Hand not detected'
-
-                                            if (handDected) {
-                                                text = 'Hand detected'
-                                            }
-
-                                            const loader = new THREE.FontLoader();
-                                            loader.load('https://cdn.jsdelivr.net/npm/three@0.150.1/examples/fonts/helvetiker_regular.typeface.json', function (font) {
-                                                const textGeometry = new THREE.TextGeometry(text, {
-                                                    font: font,
-                                                    size: 1.,
-                                                    height: 1.,
-                                                });
-                                                const textMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-                                                const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-                                                textMesh.position.set(0, 0, 0);
-                                                scene.add(textMesh);
-                                            });
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-
-       
-
+        function add_brick(x, y, z, color) { // 0xff0000
             const vertices = new Float32Array([
                 16.0, -4.0, 0.0,
                 15.5434, -4.0, 2.2962,
@@ -441,9 +372,9 @@
             customGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
             customGeometry.setIndex(indices);
             customGeometry.computeVertexNormals();
-            const customMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide });
+            const customMaterial = new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide });
             const customMesh = new THREE.Mesh(customGeometry, customMaterial);
-            customMesh.position.set(0.0, 0.0, -0.5);
+            customMesh.position.set(x, y, z);
             customMesh.scale.set(0.002, 0.002, 0.002);
             scene.add(customMesh);
 
@@ -797,6 +728,71 @@
             lineSegments.position.copy(customMesh.position);
             lineSegments.scale.copy(customMesh.scale);
             scene.add(lineSegments);
+        }
+
+        function init() {
+            // Create scene and camera
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(
+                70,
+                window.innerWidth / window.innerHeight,
+                0.01,
+                20
+            );
+
+            // Create renderer with XR enabled.
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.xr.enabled = true;
+            document.body.appendChild(renderer.domElement);
+
+            // Add ARButton to start AR session.
+            document.body.appendChild(
+                ARButton.createButton(renderer, { requiredFeatures: ["hit-test", "hand-tracking"] })
+            );
+            renderer.xr.setReferenceSpaceType('local');
+
+            if (navigator.xr) {
+                navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
+                    if (supported) {
+                        renderer.xr.addEventListener('sessionstart', (event) => {
+                            const session = renderer.xr.getSession();
+                            if (session && session.requestReferenceSpace) {
+                                session.requestReferenceSpace('local').then((refSpace) => {
+                                    if (session.requestHitTestSource && session.requestHitTestSourceForTransientInput) {
+                                        // Enable hand-tracking if available
+                                        session.addEventListener('inputsourceschange', () => {
+                                            let handDected = false;
+                                            for (const inputSource of session.inputSources) {
+                                                if (inputSource.hand) {
+                                                    handDected = true;
+
+                                                }
+                                            }
+
+                                            if (handDected) {
+                                                add_brick(0.0, -0.4, -0.5, 0x0ef621); //green
+                                            } else {
+                                                add_brick(0.0, -0.4, -0.5, 0xff0000); //red
+                                            }
+
+                                        });
+                                    }
+                                });
+                            } else {
+                                add_brick(0.0, -0.3, -0.5, 0xf6ef0e); //yellow
+                            }
+                        });
+                    } else {
+                        add_brick(0.0, -0.2, -0.5, 0x0ef6f2); //blue
+                    }
+                });
+            }
+
+            add_brick(0.0, 0.0, -0.5, 0xff0000);
+
+
 
 
             window.addEventListener("resize", onWindowResize, false);
