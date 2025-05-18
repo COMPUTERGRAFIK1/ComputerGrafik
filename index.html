@@ -749,7 +749,7 @@
 
             // Add ARButton to start AR session.
             document.body.appendChild(
-                ARButton.createButton(renderer, { requiredFeatures: ["hit-test", "hand-tracking"] })
+                ARButton.createButton(renderer, { requiredFeatures: ["hit-test"], optionalFeatures: ["hand-tracking"] })
             );
             renderer.xr.setReferenceSpaceType('local');
 
