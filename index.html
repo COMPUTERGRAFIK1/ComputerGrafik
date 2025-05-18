@@ -14,9 +14,49 @@
 </head>
 
 <body>
+    <h1>WebXR Supported Features</h1>
+    <ul id="features-list">
+        <li>Checking...</li>
+    </ul>
     <script type="module">
         import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js";
         import { ARButton } from "https://cdn.jsdelivr.net/npm/three@0.150.1/examples/jsm/webxr/ARButton.js";
+
+        const features = [
+            'local-floor', 'bounded-floor', 'hand-tracking',
+            'layers', 'dom-overlay', 'depth-sensing',
+            'hit-test', 'plane-detection', 'anchors',
+            'light-estimation', 'secondary-views'
+        ];
+
+        async function testSupportedFeatures() {
+            const list = document.getElementById('features-list');
+            list.innerHTML = ''; // Clear "Checking..." placeholder
+
+            if (!navigator.xr) {
+                list.innerHTML = '<li>WebXR not supported in this browser.</li>';
+                return;
+            }
+
+            for (const feature of features) {
+                try {
+                    await navigator.xr.requestSession('inline', {
+                        requiredFeatures: [feature]
+                    });
+                    addFeatureToDOM(feature, true);
+                } catch (e) {
+                    addFeatureToDOM(feature, false);
+                }
+            }
+        }
+
+        function addFeatureToDOM(feature, supported) {
+            const li = document.createElement('li');
+            li.textContent = `${feature}: ${supported ? '✅ Supported' : '❌ Not supported'}`;
+            document.getElementById('features-list').appendChild(li);
+        }
+
+        testSupportedFeatures();
 
         let scene, camera, renderer, cube;
 
@@ -782,8 +822,25 @@
                     //     }
                     // });
                     add_brick(0.0, -0.15, -0.5, 0xf60ed7); //purple
+
+                    session.addEventListener('inputsourceschange', () => {
+                        let handDected = false;
+                        for (const inputSource of session.inputSources) {
+                            if (inputSource.hand) {
+                                handDected = true;
+
+                            }
+                        }
+
+                        if (handDected) {
+                            add_brick(0.0, -0.4, -0.5, 0x0ef621); //green
+                        } else {
+                            add_brick(0.0, -0.4, -0.5, 0xf69d0e); //orange
+                        }
+
+                    });
                 } else {
-                    
+
                 }
             });
             add_brick(0.0, 0.0, -0.5, 0xff0000);
