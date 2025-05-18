@@ -754,6 +754,7 @@
             renderer.xr.setReferenceSpaceType('local');
 
             renderer.xr.addEventListener('sessionstart', (event) => {
+                add_brick(0.0, -0.3, -0.5, 0xf6ef0e); //yellow
                 const session = renderer.xr.getSession();
                 if (session && session.requestReferenceSpace) {
                     session.requestReferenceSpace('local').then((refSpace) => {
@@ -782,10 +783,11 @@
                     });
                     add_brick(0.0, -0.3, -0.5, 0xf60ed7); //purple
                 } else {
-                    add_brick(0.0, -0.3, -0.5, 0xf6ef0e); //yellow
+                    
                 }
             });
             add_brick(0.0, 0.0, -0.5, 0xff0000);
+            add_brick(0.0, 0.3, -0.5, 0xf60ed7); //purple
 
 
 
