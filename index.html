@@ -40,7 +40,7 @@
 
             for (const feature of features) {
                 try {
-                    await navigator.xr.requestSession('inline', {
+                    await navigator.xr.requestSession('immersive-ar', {
                         requiredFeatures: [feature]
                     });
                     addFeatureToDOM(feature, true);
