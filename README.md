@@ -1,2 +1,2 @@
 # ComputerGrafik
-Lars ist speziell
+Lars ist cool
